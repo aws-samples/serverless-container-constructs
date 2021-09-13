@@ -1,0 +1,2439 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+Object {
+  "Description": "(SO8030) - AWS CDK stack with serverless-container-constructs",
+  "Outputs": Object {
+    "ServiceExternalEndpointCAC21CCA": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "ServiceExternalAlbC648C006",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+    "ServiceExternalEndpointPrivate63B955CF": Object {
+      "Value": "http://external.svc.local",
+    },
+    "ServiceInternalEndpointFDB431AD": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "http://",
+            Object {
+              "Fn::GetAtt": Array [
+                "ServiceInternalAlbF1A10042",
+                "DNSName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+    "ServiceInternalEndpointPrivate5DE07128": Object {
+      "Value": "http://internal.svc.local",
+    },
+  },
+  "Resources": Object {
+    "ServiceCluster2E988025": Object {
+      "Properties": Object {
+        "CapacityProviders": Array [
+          "FARGATE",
+          "FARGATE_SPOT",
+        ],
+        "Cluster": Object {
+          "Ref": "ServiceCluster572F72F1",
+        },
+        "DefaultCapacityProviderStrategy": Array [],
+      },
+      "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
+    },
+    "ServiceCluster572F72F1": Object {
+      "Type": "AWS::ECS::Cluster",
+    },
+    "ServiceExtAlbListener808010AC370C": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServicecustomerExtTG3D2842F6",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceExternalAlbC648C006",
+        },
+        "Port": 8080,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceExtAlbListener80CF2B8C01": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServiceorderExtTG6A628788",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceExternalAlbC648C006",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceExtAlbListener909050DBE278": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServiceproductExtTG6F14D8B6",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceExternalAlbC648C006",
+        },
+        "Port": 9090,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceExternalAlbAliasAB897253": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "dualstack.",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "ServiceExternalAlbC648C006",
+                    "DNSName",
+                  ],
+                },
+              ],
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::GetAtt": Array [
+              "ServiceExternalAlbC648C006",
+              "CanonicalHostedZoneID",
+            ],
+          },
+        },
+        "HostedZoneId": Object {
+          "Ref": "ServiceHostedZoneC78F50F7",
+        },
+        "Name": "external.svc.local.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "ServiceExternalAlbC648C006": Object {
+      "DependsOn": Array [
+        "ServiceVpcPublicSubnet1DefaultRouteF72A5838",
+        "ServiceVpcPublicSubnet2DefaultRoute97CA78A8",
+        "ServiceVpcPublicSubnet3DefaultRoute46D8BAF4",
+      ],
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "ServiceExternalAlbSecurityGroup94D38B09",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Ref": "ServiceVpcPublicSubnet1Subnet7B418339",
+          },
+          Object {
+            "Ref": "ServiceVpcPublicSubnet2SubnetDE1A00CE",
+          },
+          Object {
+            "Ref": "ServiceVpcPublicSubnet3SubnetDDA2D85D",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "ServiceExternalAlbSecurityGroup94D38B09": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB demostackServiceExternalAlbD31E3CD8",
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80,
+          },
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 8080",
+            "FromPort": 8080,
+            "IpProtocol": "tcp",
+            "ToPort": 8080,
+          },
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 9090",
+            "FromPort": 9090,
+            "IpProtocol": "tcp",
+            "ToPort": 9090,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ServiceExternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA808005D8D766": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServicecustomerServiceSecurityGroup79D4888A",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceExternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080D88F4A9D": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceorderServiceSecurityGroupFFF4D002",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceExternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F808067C4E203": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceproductServiceSecurityGroup87076A63",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceHostedZoneC78F50F7": Object {
+      "Properties": Object {
+        "Name": "svc.local.",
+        "VPCs": Array [
+          Object {
+            "VPCId": Object {
+              "Ref": "ServiceVpc4872DC6E",
+            },
+            "VPCRegion": "us-east-1",
+          },
+        ],
+      },
+      "Type": "AWS::Route53::HostedZone",
+    },
+    "ServiceIntAlbListener808027FA1497": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServicecustomerIntTG0D7967D6",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceInternalAlbF1A10042",
+        },
+        "Port": 8080,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceIntAlbListener80DD49BDE2": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServiceorderIntTG967BECD7",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceInternalAlbF1A10042",
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceIntAlbListener90902FF1540B": Object {
+      "Properties": Object {
+        "DefaultActions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "ServiceproductIntTGD6EBD86F",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": Object {
+          "Ref": "ServiceInternalAlbF1A10042",
+        },
+        "Port": 9090,
+        "Protocol": "HTTP",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+    },
+    "ServiceInternalAlbAlias96350912": Object {
+      "Properties": Object {
+        "AliasTarget": Object {
+          "DNSName": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "dualstack.",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "ServiceInternalAlbF1A10042",
+                    "DNSName",
+                  ],
+                },
+              ],
+            ],
+          },
+          "HostedZoneId": Object {
+            "Fn::GetAtt": Array [
+              "ServiceInternalAlbF1A10042",
+              "CanonicalHostedZoneID",
+            ],
+          },
+        },
+        "HostedZoneId": Object {
+          "Ref": "ServiceHostedZoneC78F50F7",
+        },
+        "Name": "internal.svc.local.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "ServiceInternalAlbF1A10042": Object {
+      "Properties": Object {
+        "LoadBalancerAttributes": Array [
+          Object {
+            "Key": "deletion_protection.enabled",
+            "Value": "false",
+          },
+        ],
+        "Scheme": "internal",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "ServiceInternalAlbSecurityGroupC261916D",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": Array [
+          Object {
+            "Ref": "ServiceVpcPrivateSubnet1Subnet5DB98340",
+          },
+          Object {
+            "Ref": "ServiceVpcPrivateSubnet2Subnet0A0B778B",
+          },
+          Object {
+            "Ref": "ServiceVpcPrivateSubnet3SubnetFED5903C",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "ServiceInternalAlbSecurityGroupC261916D": Object {
+      "Properties": Object {
+        "GroupDescription": "Automatically created Security Group for ELB demostackServiceInternalAlb994CEF0B",
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 80",
+            "FromPort": 80,
+            "IpProtocol": "tcp",
+            "ToPort": 80,
+          },
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 8080",
+            "FromPort": 8080,
+            "IpProtocol": "tcp",
+            "ToPort": 8080,
+          },
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 9090",
+            "FromPort": 9090,
+            "IpProtocol": "tcp",
+            "ToPort": 9090,
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ServiceInternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA8080222FC1FF": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServicecustomerServiceSecurityGroup79D4888A",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceInternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080113E2EF0": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceorderServiceSecurityGroupFFF4D002",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceInternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F80804A82D088": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceproductServiceSecurityGroup87076A63",
+            "GroupId",
+          ],
+        },
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ServiceVpc4872DC6E": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "ServiceVpcIGW3632B5D3": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "ServiceVpcPrivateSubnet1DefaultRouteB37C23F8": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "ServiceVpcPublicSubnet1NATGateway9BBDB3C5",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet1RouteTable5209DE9A",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPrivateSubnet1RouteTable5209DE9A": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPrivateSubnet1RouteTableAssociation4A5ACF30": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet1RouteTable5209DE9A",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPrivateSubnet1Subnet5DB98340",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPrivateSubnet1Subnet5DB98340": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.96.0/19",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcPrivateSubnet2DefaultRouteA078E6D4": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "ServiceVpcPublicSubnet1NATGateway9BBDB3C5",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet2RouteTable4F1B423F",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPrivateSubnet2RouteTable4F1B423F": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPrivateSubnet2RouteTableAssociation7897F574": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet2RouteTable4F1B423F",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPrivateSubnet2Subnet0A0B778B",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPrivateSubnet2Subnet0A0B778B": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.128.0/19",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcPrivateSubnet3DefaultRoute83FBD0C8": Object {
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": Object {
+          "Ref": "ServiceVpcPublicSubnet1NATGateway9BBDB3C5",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet3RouteTableCF245C16",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPrivateSubnet3RouteTableAssociation53D40930": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPrivateSubnet3RouteTableCF245C16",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPrivateSubnet3SubnetFED5903C",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPrivateSubnet3RouteTableCF245C16": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet3",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPrivateSubnet3SubnetFED5903C": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1c",
+        "CidrBlock": "10.0.160.0/19",
+        "MapPublicIpOnLaunch": false,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PrivateSubnet3",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcPublicSubnet1DefaultRouteF72A5838": Object {
+      "DependsOn": Array [
+        "ServiceVpcVPCGW9C39B7F3",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "ServiceVpcIGW3632B5D3",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet1RouteTable027A7251",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPublicSubnet1EIPBF5935BA": Object {
+      "Properties": Object {
+        "Domain": "vpc",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "ServiceVpcPublicSubnet1NATGateway9BBDB3C5": Object {
+      "Properties": Object {
+        "AllocationId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceVpcPublicSubnet1EIPBF5935BA",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPublicSubnet1Subnet7B418339",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "ServiceVpcPublicSubnet1RouteTable027A7251": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPublicSubnet1RouteTableAssociation2963E32D": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet1RouteTable027A7251",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPublicSubnet1Subnet7B418339",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPublicSubnet1Subnet7B418339": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.0.0/19",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcPublicSubnet2DefaultRoute97CA78A8": Object {
+      "DependsOn": Array [
+        "ServiceVpcVPCGW9C39B7F3",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "ServiceVpcIGW3632B5D3",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet2RouteTableA8F90839",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPublicSubnet2RouteTableA8F90839": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPublicSubnet2RouteTableAssociation4E486CF4": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet2RouteTableA8F90839",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPublicSubnet2SubnetDE1A00CE",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPublicSubnet2SubnetDE1A00CE": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1b",
+        "CidrBlock": "10.0.32.0/19",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcPublicSubnet3DefaultRoute46D8BAF4": Object {
+      "DependsOn": Array [
+        "ServiceVpcVPCGW9C39B7F3",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "ServiceVpcIGW3632B5D3",
+        },
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet3RouteTable0E569227",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "ServiceVpcPublicSubnet3RouteTable0E569227": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet3",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "ServiceVpcPublicSubnet3RouteTableAssociationEB299000": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "ServiceVpcPublicSubnet3RouteTable0E569227",
+        },
+        "SubnetId": Object {
+          "Ref": "ServiceVpcPublicSubnet3SubnetDDA2D85D",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "ServiceVpcPublicSubnet3SubnetDDA2D85D": Object {
+      "Properties": Object {
+        "AvailabilityZone": "dummy1c",
+        "CidrBlock": "10.0.64.0/19",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc/PublicSubnet3",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "ServiceVpcVPCGW9C39B7F3": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "ServiceVpcIGW3632B5D3",
+        },
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "ServicecustomerExtTG3D2842F6": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServicecustomerIntTG0D7967D6": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServicecustomerService8F0EBE1F": Object {
+      "DependsOn": Array [
+        "ServiceExtAlbListener808010AC370C",
+        "ServiceIntAlbListener808027FA1497",
+      ],
+      "Properties": Object {
+        "CapacityProviderStrategy": Array [
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE_SPOT",
+            "Weight": 1,
+          },
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE",
+            "Weight": 0,
+          },
+        ],
+        "Cluster": Object {
+          "Ref": "ServiceCluster572F72F1",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 2,
+        "EnableECSManagedTags": false,
+        "EnableExecuteCommand": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "customer",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServicecustomerExtTG3D2842F6",
+            },
+          },
+          Object {
+            "ContainerName": "customer",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServicecustomerIntTG0D7967D6",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServicecustomerServiceSecurityGroup79D4888A",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet1Subnet5DB98340",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet2Subnet0A0B778B",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet3SubnetFED5903C",
+              },
+            ],
+          },
+        },
+        "TaskDefinition": Object {
+          "Ref": "customerTaskE634F834",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "ServicecustomerServiceSecurityGroup79D4888A": Object {
+      "Properties": Object {
+        "GroupDescription": "demo-stack/Service/customerService/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ServicecustomerServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup75093328808043049641": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServicecustomerServiceSecurityGroup79D4888A",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServicecustomerServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup888743608080FF622F3A": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServicecustomerServiceSecurityGroup79D4888A",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServicecustomerServiceTaskCountTarget93297161": Object {
+      "Properties": Object {
+        "MaxCapacity": 10,
+        "MinCapacity": 1,
+        "ResourceId": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "service/",
+              Object {
+                "Ref": "ServiceCluster572F72F1",
+              },
+              "/",
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServicecustomerService8F0EBE1F",
+                  "Name",
+                ],
+              },
+            ],
+          ],
+        },
+        "RoleARN": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":iam::123456789012:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+            ],
+          ],
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+    },
+    "ServicecustomerServiceTaskCountTargetCpuScalingCB60743B": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServicecustomerServiceTaskCountTargetCpuScalingA697DA4A",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServicecustomerServiceTaskCountTarget93297161",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization",
+          },
+          "TargetValue": 50,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServicecustomerServiceTaskCountTargetRequestScaling2DB7EC8EF": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServicecustomerServiceTaskCountTargetRequestScaling2821F02E3",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServicecustomerServiceTaskCountTarget93297161",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener808027FA1497",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener808027FA1497",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener808027FA1497",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServicecustomerIntTG0D7967D6",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServicecustomerServiceTaskCountTargetRequestScalingBEF21383": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServicecustomerServiceTaskCountTargetRequestScaling35027BB0",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServicecustomerServiceTaskCountTarget93297161",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener808010AC370C",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener808010AC370C",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener808010AC370C",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServicecustomerExtTG3D2842F6",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceorderExtTG6A628788": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServiceorderIntTG967BECD7": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServiceorderService8E2DD24C": Object {
+      "DependsOn": Array [
+        "ServiceExtAlbListener80CF2B8C01",
+        "ServiceIntAlbListener80DD49BDE2",
+      ],
+      "Properties": Object {
+        "CapacityProviderStrategy": Array [
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE_SPOT",
+            "Weight": 1,
+          },
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE",
+            "Weight": 0,
+          },
+        ],
+        "Cluster": Object {
+          "Ref": "ServiceCluster572F72F1",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 2,
+        "EnableECSManagedTags": false,
+        "EnableExecuteCommand": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "order",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServiceorderExtTG6A628788",
+            },
+          },
+          Object {
+            "ContainerName": "order",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServiceorderIntTG967BECD7",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServiceorderServiceSecurityGroupFFF4D002",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet1Subnet5DB98340",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet2Subnet0A0B778B",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet3SubnetFED5903C",
+              },
+            ],
+          },
+        },
+        "TaskDefinition": Object {
+          "Ref": "orderTask03DDDCC6",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "ServiceorderServiceSecurityGroupFFF4D002": Object {
+      "Properties": Object {
+        "GroupDescription": "demo-stack/Service/orderService/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ServiceorderServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup7509332880801797C389": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceorderServiceSecurityGroupFFF4D002",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServiceorderServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup88874360808086403B80": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceorderServiceSecurityGroupFFF4D002",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServiceorderServiceTaskCountTarget1DF1B896": Object {
+      "Properties": Object {
+        "MaxCapacity": 20,
+        "MinCapacity": 1,
+        "ResourceId": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "service/",
+              Object {
+                "Ref": "ServiceCluster572F72F1",
+              },
+              "/",
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServiceorderService8E2DD24C",
+                  "Name",
+                ],
+              },
+            ],
+          ],
+        },
+        "RoleARN": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":iam::123456789012:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+            ],
+          ],
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+    },
+    "ServiceorderServiceTaskCountTargetCpuScaling3846C42F": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceorderServiceTaskCountTargetCpuScaling91FB6CD5",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceorderServiceTaskCountTarget1DF1B896",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization",
+          },
+          "TargetValue": 50,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceorderServiceTaskCountTargetRequestScaling2D4289F88": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceorderServiceTaskCountTargetRequestScaling224FD8018",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceorderServiceTaskCountTarget1DF1B896",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener80DD49BDE2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener80DD49BDE2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener80DD49BDE2",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServiceorderIntTG967BECD7",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceorderServiceTaskCountTargetRequestScaling8FA38B30": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceorderServiceTaskCountTargetRequestScaling43FCB665",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceorderServiceTaskCountTarget1DF1B896",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener80CF2B8C01",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener80CF2B8C01",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener80CF2B8C01",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServiceorderExtTG6A628788",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceproductExtTG6F14D8B6": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServiceproductIntTGD6EBD86F": Object {
+      "Properties": Object {
+        "Port": 80,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "ServiceproductService76D76EF8": Object {
+      "DependsOn": Array [
+        "ServiceExtAlbListener909050DBE278",
+        "ServiceIntAlbListener90902FF1540B",
+      ],
+      "Properties": Object {
+        "CapacityProviderStrategy": Array [
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE_SPOT",
+            "Weight": 1,
+          },
+          Object {
+            "Base": 0,
+            "CapacityProvider": "FARGATE",
+            "Weight": 0,
+          },
+        ],
+        "Cluster": Object {
+          "Ref": "ServiceCluster572F72F1",
+        },
+        "DeploymentConfiguration": Object {
+          "MaximumPercent": 200,
+          "MinimumHealthyPercent": 50,
+        },
+        "DesiredCount": 2,
+        "EnableECSManagedTags": false,
+        "EnableExecuteCommand": false,
+        "HealthCheckGracePeriodSeconds": 60,
+        "LoadBalancers": Array [
+          Object {
+            "ContainerName": "product",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServiceproductExtTG6F14D8B6",
+            },
+          },
+          Object {
+            "ContainerName": "product",
+            "ContainerPort": 8080,
+            "TargetGroupArn": Object {
+              "Ref": "ServiceproductIntTGD6EBD86F",
+            },
+          },
+        ],
+        "NetworkConfiguration": Object {
+          "AwsvpcConfiguration": Object {
+            "AssignPublicIp": "DISABLED",
+            "SecurityGroups": Array [
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServiceproductServiceSecurityGroup87076A63",
+                  "GroupId",
+                ],
+              },
+            ],
+            "Subnets": Array [
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet1Subnet5DB98340",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet2Subnet0A0B778B",
+              },
+              Object {
+                "Ref": "ServiceVpcPrivateSubnet3SubnetFED5903C",
+              },
+            ],
+          },
+        },
+        "TaskDefinition": Object {
+          "Ref": "productTask0ED254BC",
+        },
+      },
+      "Type": "AWS::ECS::Service",
+    },
+    "ServiceproductServiceSecurityGroup87076A63": Object {
+      "Properties": Object {
+        "GroupDescription": "demo-stack/Service/productService/SecurityGroup",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "ServiceproductServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup750933288080D86FAD53": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceproductServiceSecurityGroup87076A63",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceExternalAlbSecurityGroup94D38B09",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServiceproductServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup8887436080805FD62758": Object {
+      "Properties": Object {
+        "Description": "Load balancer to target",
+        "FromPort": 8080,
+        "GroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceproductServiceSecurityGroup87076A63",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": Object {
+          "Fn::GetAtt": Array [
+            "ServiceInternalAlbSecurityGroupC261916D",
+            "GroupId",
+          ],
+        },
+        "ToPort": 8080,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ServiceproductServiceTaskCountTarget3E8314AF": Object {
+      "Properties": Object {
+        "MaxCapacity": 10,
+        "MinCapacity": 1,
+        "ResourceId": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "service/",
+              Object {
+                "Ref": "ServiceCluster572F72F1",
+              },
+              "/",
+              Object {
+                "Fn::GetAtt": Array [
+                  "ServiceproductService76D76EF8",
+                  "Name",
+                ],
+              },
+            ],
+          ],
+        },
+        "RoleARN": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":iam::123456789012:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+            ],
+          ],
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+    },
+    "ServiceproductServiceTaskCountTargetCpuScaling05736257": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceproductServiceTaskCountTargetCpuScaling83756787",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceproductServiceTaskCountTarget3E8314AF",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization",
+          },
+          "TargetValue": 50,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceproductServiceTaskCountTargetRequestScaling2242D689C": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceproductServiceTaskCountTargetRequestScaling2C258B22F",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceproductServiceTaskCountTarget3E8314AF",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener90902FF1540B",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener90902FF1540B",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceIntAlbListener90902FF1540B",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServiceproductIntTGD6EBD86F",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "ServiceproductServiceTaskCountTargetRequestScaling88F3E40C": Object {
+      "Properties": Object {
+        "PolicyName": "demostackServiceproductServiceTaskCountTargetRequestScaling8A8BF0F7",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": Object {
+          "Ref": "ServiceproductServiceTaskCountTarget3E8314AF",
+        },
+        "TargetTrackingScalingPolicyConfiguration": Object {
+          "PredefinedMetricSpecification": Object {
+            "PredefinedMetricType": "ALBRequestCountPerTarget",
+            "ResourceLabel": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  Object {
+                    "Fn::Select": Array [
+                      1,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener909050DBE278",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      2,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener909050DBE278",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::Select": Array [
+                      3,
+                      Object {
+                        "Fn::Split": Array [
+                          "/",
+                          Object {
+                            "Ref": "ServiceExtAlbListener909050DBE278",
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  "/",
+                  Object {
+                    "Fn::GetAtt": Array [
+                      "ServiceproductExtTG6F14D8B6",
+                      "TargetGroupFullName",
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+          "TargetValue": 1000,
+        },
+      },
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+    },
+    "customerTaskE634F834": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "PRODUCT_SVC_URL",
+                "Value": "http://internal.svc.local:9090",
+              },
+              Object {
+                "Name": "CUSTOMER_SVC_URL",
+                "Value": "http://internal.svc.local:8080",
+              },
+              Object {
+                "Name": "serviceName",
+                "Value": "customer",
+              },
+              Object {
+                "Name": "versionNum",
+                "Value": "1.0",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "123456789012.dkr.ecr.us-east-1.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/aws-cdk/assets:1adf1e0aa55db7c81053817a2b831dc8aafb17e60d47c9e37ed581e03998638b",
+                ],
+              ],
+            },
+            "Name": "customer",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8080,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "customerTaskExecutionRole2ECDAB80",
+            "Arn",
+          ],
+        },
+        "Family": "demostackcustomerTask70F4F326",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "customerTaskTaskRole2300583B",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "customerTaskExecutionRole2ECDAB80": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "customerTaskExecutionRoleDefaultPolicy2FB69FC7": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "customerTaskExecutionRoleDefaultPolicy2FB69FC7",
+        "Roles": Array [
+          Object {
+            "Ref": "customerTaskExecutionRole2ECDAB80",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "customerTaskTaskRole2300583B": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "orderTask03DDDCC6": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "PRODUCT_SVC_URL",
+                "Value": "http://internal.svc.local:9090",
+              },
+              Object {
+                "Name": "CUSTOMER_SVC_URL",
+                "Value": "http://internal.svc.local:8080",
+              },
+              Object {
+                "Name": "serviceName",
+                "Value": "order",
+              },
+              Object {
+                "Name": "versionNum",
+                "Value": "1.0",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "123456789012.dkr.ecr.us-east-1.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/aws-cdk/assets:8f81d7ee9ca280e109f8864efb89c8a4b8af311e4ae250ae66e63267af76296b",
+                ],
+              ],
+            },
+            "Name": "order",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8080,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "orderTaskExecutionRoleDD96D6BA",
+            "Arn",
+          ],
+        },
+        "Family": "demostackorderTaskB3C8A151",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "orderTaskTaskRole8B08AA90",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "orderTaskExecutionRoleDD96D6BA": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "orderTaskExecutionRoleDefaultPolicy53DD50F0": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "orderTaskExecutionRoleDefaultPolicy53DD50F0",
+        "Roles": Array [
+          Object {
+            "Ref": "orderTaskExecutionRoleDD96D6BA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "orderTaskTaskRole8B08AA90": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "productTask0ED254BC": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "PRODUCT_SVC_URL",
+                "Value": "http://internal.svc.local:9090",
+              },
+              Object {
+                "Name": "CUSTOMER_SVC_URL",
+                "Value": "http://internal.svc.local:8080",
+              },
+              Object {
+                "Name": "serviceName",
+                "Value": "product",
+              },
+              Object {
+                "Name": "versionNum",
+                "Value": "1.0",
+              },
+            ],
+            "Essential": true,
+            "Image": Object {
+              "Fn::Join": Array [
+                "",
+                Array [
+                  "123456789012.dkr.ecr.us-east-1.",
+                  Object {
+                    "Ref": "AWS::URLSuffix",
+                  },
+                  "/aws-cdk/assets:1adf1e0aa55db7c81053817a2b831dc8aafb17e60d47c9e37ed581e03998638b",
+                ],
+              ],
+            },
+            "Name": "product",
+            "PortMappings": Array [
+              Object {
+                "ContainerPort": 8080,
+                "Protocol": "tcp",
+              },
+            ],
+          },
+        ],
+        "Cpu": "256",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "productTaskExecutionRole38308141",
+            "Arn",
+          ],
+        },
+        "Family": "demostackproductTaskE9CBB2A8",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "productTaskTaskRole1AF87391",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "productTaskExecutionRole38308141": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "productTaskExecutionRoleDefaultPolicyBFBD4C19": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    "arn:",
+                    Object {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "ecr:GetAuthorizationToken",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "productTaskExecutionRoleDefaultPolicyBFBD4C19",
+        "Roles": Array [
+          Object {
+            "Ref": "productTaskExecutionRole38308141",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "productTaskTaskRole1AF87391": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;

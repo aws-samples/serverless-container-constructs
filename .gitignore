@@ -2,9 +2,9 @@
 !/.gitattributes
 !/.projen/tasks.json
 !/.projen/deps.json
+!/.github/workflows/auto-approve.yml
 !/.github/workflows/stale.yml
 !/package.json
-!/LICENSE
 !/.npmignore
 logs
 *.log
@@ -49,4 +49,10 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+cdk.out
+cdk.context.json
+yarn-error.log
+dependabot.yml
+website/public
+.vscode
 !/.github/workflows/release.yml
