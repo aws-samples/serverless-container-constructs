@@ -58,6 +58,14 @@ Object {
       "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
     },
     "ServiceCluster572F72F1": Object {
+      "Properties": Object {
+        "ClusterSettings": Array [
+          Object {
+            "Name": "containerInsights",
+            "Value": "enabled",
+          },
+        ],
+      },
       "Type": "AWS::ECS::Cluster",
     },
     "ServiceExtAlbListener808010AC370C": Object {

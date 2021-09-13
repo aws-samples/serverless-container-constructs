@@ -157,6 +157,7 @@ export class AlbFargateServices extends cdk.Construct {
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: this.vpc,
       enableFargateCapacityProviders: true,
+      containerInsights: true,
     });
 
     const spotOnlyStrategy = [
