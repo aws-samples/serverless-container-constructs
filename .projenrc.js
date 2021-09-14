@@ -25,6 +25,7 @@ const project = new AwsCdkConstructLibrary({
     '@aws-cdk/aws-route53',
     '@aws-cdk/aws-route53-targets',
     '@aws-cdk/aws-secretsmanager',
+    '@aws-cdk/aws-s3',
     '@aws-cdk/aws-certificatemanager',
     '@aws-cdk/aws-elasticloadbalancingv2',
   ],

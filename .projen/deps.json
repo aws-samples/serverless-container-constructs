@@ -155,6 +155,11 @@
       "type": "peer"
     },
     {
+      "name": "@aws-cdk/aws-s3",
+      "version": "^1.95.2",
+      "type": "peer"
+    },
+    {
       "name": "@aws-cdk/aws-secretsmanager",
       "version": "^1.95.2",
       "type": "peer"
@@ -231,6 +236,11 @@
     },
     {
       "name": "@aws-cdk/aws-route53",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-s3",
       "version": "^1.95.2",
       "type": "runtime"
     },

@@ -4,6 +4,7 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as targets from '@aws-cdk/aws-route53-targets';
 import * as cdk from '@aws-cdk/core';
+import * as s3 from '@aws-cdk/aws-s3';
 
 
 export interface AlbFargateServicesProps {
@@ -140,11 +141,16 @@ export class AlbFargateServices extends cdk.Construct {
       }
     });
 
+    // create the access log bucket
+    const accessLogBucket = new s3.Bucket(this, 'AccessLogBucket', {
+      encryption: s3.BucketEncryption.S3_MANAGED,
+    });
     if (this.hasExternalLoadBalancer) {
       this.externalAlb = new elbv2.ApplicationLoadBalancer(this, 'ExternalAlb', {
         vpc: this.vpc,
         internetFacing: true,
       });
+      this.externalAlb.logAccessLogs(accessLogBucket, `${id}-extalblog`)
     }
 
     if (this.hasInternalLoadBalancer) {
@@ -152,11 +158,13 @@ export class AlbFargateServices extends cdk.Construct {
         vpc: this.vpc,
         internetFacing: false,
       });
+      this.internalAlb.logAccessLogs(accessLogBucket, `${id}-intalblog`)
     }
 
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: this.vpc,
       enableFargateCapacityProviders: true,
+      containerInsights: true,
     });
 
     const spotOnlyStrategy = [
@@ -306,5 +314,9 @@ function getOrCreateVpc(scope: cdk.Construct): ec2.IVpc {
     || process.env.CDK_USE_DEFAULT_VPC === '1' ? ec2.Vpc.fromLookup(scope, 'Vpc', { isDefault: true }) :
     scope.node.tryGetContext('use_vpc_id') ?
       ec2.Vpc.fromLookup(scope, 'Vpc', { vpcId: scope.node.tryGetContext('use_vpc_id') }) :
-      new ec2.Vpc(scope, 'Vpc', { maxAzs: 3, natGateways: 1 });
+      new ec2.Vpc(scope, 'Vpc', { 
+        maxAzs: 3, 
+        natGateways: 1,
+        flowLogs: { flowLogs: {} },
+      });
 }
