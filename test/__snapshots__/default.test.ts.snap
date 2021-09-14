@@ -44,9 +44,20 @@ Object {
     },
   },
   "Resources": Object {
-    "ServiceAccessLogBucket010FE97D": Object {
+    "ServiceAccessLogBucket3812154F": Object {
       "DeletionPolicy": "Retain",
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-S1",
+              "reason": "implicitly set current bucket as the acces log bucket",
+            },
+          ],
+        },
+      },
       "Properties": Object {
+        "AccessControl": "LogDeliveryWrite",
         "BucketEncryption": Object {
           "ServerSideEncryptionConfiguration": Array [
             Object {
@@ -56,14 +67,23 @@ Object {
             },
           ],
         },
+        "LoggingConfiguration": Object {
+          "LogFilePrefix": "access-log-",
+        },
+        "PublicAccessBlockConfiguration": Object {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
       },
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "ServiceAccessLogBucketPolicyAB330285": Object {
+    "ServiceAccessLogBucketPolicy639F9091": Object {
       "Properties": Object {
         "Bucket": Object {
-          "Ref": "ServiceAccessLogBucket010FE97D",
+          "Ref": "ServiceAccessLogBucket3812154F",
         },
         "PolicyDocument": Object {
           "Statement": Array [
@@ -93,7 +113,7 @@ Object {
                   Array [
                     Object {
                       "Fn::GetAtt": Array [
-                        "ServiceAccessLogBucket010FE97D",
+                        "ServiceAccessLogBucket3812154F",
                         "Arn",
                       ],
                     },
@@ -128,7 +148,7 @@ Object {
                   Array [
                     Object {
                       "Fn::GetAtt": Array [
-                        "ServiceAccessLogBucket010FE97D",
+                        "ServiceAccessLogBucket3812154F",
                         "Arn",
                       ],
                     },
@@ -164,6 +184,11 @@ Object {
             "Value": "enabled",
           },
         ],
+        "Configuration": Object {
+          "ExecuteCommandConfiguration": Object {
+            "Logging": "DEFAULT",
+          },
+        },
       },
       "Type": "AWS::ECS::Cluster",
     },
@@ -255,8 +280,8 @@ Object {
     },
     "ServiceExternalAlbC648C006": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
         "ServiceVpcPublicSubnet1DefaultRouteF72A5838",
         "ServiceVpcPublicSubnet2DefaultRoute97CA78A8",
         "ServiceVpcPublicSubnet3DefaultRoute46D8BAF4",
@@ -274,7 +299,7 @@ Object {
           Object {
             "Key": "access_logs.s3.bucket",
             "Value": Object {
-              "Ref": "ServiceAccessLogBucket010FE97D",
+              "Ref": "ServiceAccessLogBucket3812154F",
             },
           },
           Object {
@@ -308,9 +333,19 @@ Object {
     },
     "ServiceExternalAlbSecurityGroup94D38B09": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-EC23",
+              "reason": "public ALB requires 0.0.0.0/0 inbound access",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "GroupDescription": "Automatically created Security Group for ELB demostackServiceExternalAlbD31E3CD8",
         "SecurityGroupIngress": Array [
@@ -344,8 +379,8 @@ Object {
     },
     "ServiceExternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA808005D8D766": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -369,8 +404,8 @@ Object {
     },
     "ServiceExternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080D88F4A9D": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -394,8 +429,8 @@ Object {
     },
     "ServiceExternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F808067C4E203": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -519,8 +554,8 @@ Object {
     },
     "ServiceInternalAlbF1A10042": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
@@ -535,7 +570,7 @@ Object {
           Object {
             "Key": "access_logs.s3.bucket",
             "Value": Object {
-              "Ref": "ServiceAccessLogBucket010FE97D",
+              "Ref": "ServiceAccessLogBucket3812154F",
             },
           },
           Object {
@@ -569,9 +604,19 @@ Object {
     },
     "ServiceInternalAlbSecurityGroupC261916D": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-EC23",
+              "reason": "internal ALB requires 0.0.0.0/0 inbound access",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "GroupDescription": "Automatically created Security Group for ELB demostackServiceInternalAlb994CEF0B",
         "SecurityGroupIngress": Array [
@@ -605,8 +650,8 @@ Object {
     },
     "ServiceInternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA8080222FC1FF": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -630,8 +675,8 @@ Object {
     },
     "ServiceInternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080113E2EF0": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -655,8 +700,8 @@ Object {
     },
     "ServiceInternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F80804A82D088": Object {
       "DependsOn": Array [
-        "ServiceAccessLogBucketPolicyAB330285",
-        "ServiceAccessLogBucket010FE97D",
+        "ServiceAccessLogBucketPolicy639F9091",
+        "ServiceAccessLogBucket3812154F",
       ],
       "Properties": Object {
         "Description": "Load balancer to target",
@@ -2365,6 +2410,16 @@ Object {
       "Type": "AWS::IAM::Role",
     },
     "customerTaskExecutionRoleDefaultPolicy2FB69FC7": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "ecr:GetAuthorizationToken requires wildcard resource",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
@@ -2506,6 +2561,16 @@ Object {
       "Type": "AWS::IAM::Role",
     },
     "orderTaskExecutionRoleDefaultPolicy53DD50F0": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "ecr:GetAuthorizationToken requires wildcard resource",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
@@ -2647,6 +2712,16 @@ Object {
       "Type": "AWS::IAM::Role",
     },
     "productTaskExecutionRoleDefaultPolicyBFBD4C19": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "ecr:GetAuthorizationToken requires wildcard resource",
+            },
+          ],
+        },
+      },
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [

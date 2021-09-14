@@ -2,9 +2,9 @@ import * as path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as cdk from '@aws-cdk/core';
+import { AwsSolutionsChecks } from 'cdk-nag';
 import { AlbFargateServices } from './index';
 import { LoadBalancerAccessibility } from './main';
-
 
 const app = new cdk.App();
 
@@ -14,6 +14,10 @@ const env = {
 };
 
 const stack = new cdk.Stack(app, 'demo-stack', { env });
+
+if (stack.node.tryGetContext('AWS_SOLUTIONS_CHECK')) {
+  cdk.Aspects.of(app).add(new AwsSolutionsChecks());
+}
 
 const orderTask = new ecs.FargateTaskDefinition(stack, 'orderTask', {
   cpu: 256,
@@ -36,6 +40,7 @@ orderTask.addContainer('order', {
     serviceName: 'order',
     versionNum: '1.0',
   },
+  logging: new ecs.AwsLogDriver({ streamPrefix: 'order-' }),
 });
 
 const customerTask = new ecs.FargateTaskDefinition(stack, 'customerTask', {
