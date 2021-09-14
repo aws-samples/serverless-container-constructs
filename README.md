@@ -142,9 +142,9 @@ To deploy the sample application in you default VPC:
 
 ```sh
 // install first
-$ yarn install
-$ npx cdk diff -c use_default_vpc=1
-$ npx cdk deploy -c use_default_vpc=1
+yarn install
+npx cdk diff -c use_default_vpc=1
+npx cdk deploy -c use_default_vpc=1
 ```
 
 On deployment complete, you will see the external ALB endpoint in the CDK output. `cURL` the external HTTP endpoint and you should be able to see the aggregated response.
@@ -156,6 +156,16 @@ $ curl http://demo-Servi-EH1OINYDWDU9-1397122594.ap-northeast-1.elb.amazonaws.co
 {"service":"order", "version":"1.0"}
 {"service":"product","version":"1.0"}
 {"service":"customer","version":"1.0"}
+```
+
+## `cdk-nag` with `AwsSolutions` check
+
+This construct follows the best practices from the [AWS Solutoins](https://github.com/cdklabs/cdk-nag/blob/main/RULES.md#awssolutions) with [cdk-nag](https://github.com/cdklabs/cdk-nag). Enable the `AWS_SOLUTIONS_CHECK` context variable to check aginst the cdk-nag rules.
+
+```sh
+npx cdk diff -c AWS_SOLUTIONS_CHECK=1
+or
+npx cdk synth -c AWS_SOLUTIONS_CHECK=1
 ```
 
 
