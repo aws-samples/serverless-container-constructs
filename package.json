@@ -91,7 +91,8 @@
     "@aws-cdk/aws-route53-targets": "^1.95.2",
     "@aws-cdk/aws-s3": "^1.95.2",
     "@aws-cdk/aws-secretsmanager": "^1.95.2",
-    "@aws-cdk/core": "^1.95.2"
+    "@aws-cdk/core": "^1.95.2",
+    "cdk-nag": "^0.0.81"
   },
   "bundledDependencies": [],
   "keywords": [

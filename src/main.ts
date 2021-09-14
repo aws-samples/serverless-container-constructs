@@ -1,10 +1,11 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as iam from '@aws-cdk/aws-iam';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as targets from '@aws-cdk/aws-route53-targets';
 import * as cdk from '@aws-cdk/core';
-import * as s3 from '@aws-cdk/aws-s3';
+import * as cdknag from './cdknag';
 
 
 export interface AlbFargateServicesProps {
@@ -142,15 +143,14 @@ export class AlbFargateServices extends cdk.Construct {
     });
 
     // create the access log bucket
-    const accessLogBucket = new s3.Bucket(this, 'AccessLogBucket', {
-      encryption: s3.BucketEncryption.S3_MANAGED,
-    });
+    const accessLogBucket = new cdknag.AccessLogDeliveryBucket(this, 'AccessLogBucket').bucket;
+
     if (this.hasExternalLoadBalancer) {
       this.externalAlb = new elbv2.ApplicationLoadBalancer(this, 'ExternalAlb', {
         vpc: this.vpc,
         internetFacing: true,
       });
-      this.externalAlb.logAccessLogs(accessLogBucket, `${id}-extalblog`)
+      this.externalAlb.logAccessLogs(accessLogBucket, `${id}-extalblog`);
     }
 
     if (this.hasInternalLoadBalancer) {
@@ -158,13 +158,16 @@ export class AlbFargateServices extends cdk.Construct {
         vpc: this.vpc,
         internetFacing: false,
       });
-      this.internalAlb.logAccessLogs(accessLogBucket, `${id}-intalblog`)
+      this.internalAlb.logAccessLogs(accessLogBucket, `${id}-intalblog`);
     }
 
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: this.vpc,
       enableFargateCapacityProviders: true,
       containerInsights: true,
+      executeCommandConfiguration: {
+        logging: ecs.ExecuteCommandLogging.DEFAULT,
+      },
     });
 
     const spotOnlyStrategy = [
@@ -284,6 +287,46 @@ export class AlbFargateServices extends cdk.Construct {
       cdk.Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
     }
 
+    /**
+     * suppress the cdk-nag rules
+     */
+    if (this.externalAlb) {
+      let sg: ec2.CfnSecurityGroup;
+      sg = this.externalAlb.node.tryFindChild('SecurityGroup') as ec2.CfnSecurityGroup;
+      cdknag.Suppress.securityGroup(sg, [
+        {
+          id: 'AwsSolutions-EC23',
+          reason: 'public ALB requires 0.0.0.0/0 inbound access',
+        },
+      ]);
+    }
+    if (this.internalAlb) {
+      let sg: ec2.CfnSecurityGroup;
+      sg = this.internalAlb.node.tryFindChild('SecurityGroup') as ec2.CfnSecurityGroup;
+      cdknag.Suppress.securityGroup(sg, [
+        {
+          id: 'AwsSolutions-EC23',
+          reason: 'internal ALB requires 0.0.0.0/0 inbound access',
+        },
+      ]);
+    }
+    props.tasks.forEach(t => {
+      let cfnPolicy = t.task.executionRole?.node.tryFindChild('DefaultPolicy') as iam.Policy;
+      cdknag.Suppress.iamPolicy(cfnPolicy, [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason: 'ecr:GetAuthorizationToken requires wildcard resource',
+        },
+      ]);
+      cfnPolicy = t.task.taskRole?.node.tryFindChild('DefaultPolicy') as iam.Policy;
+      cdknag.Suppress.iamPolicy(cfnPolicy, [
+        {
+          id: 'AwsSolutions-IAM5',
+          reason: 'task role with ECS exec support requires wildcard resource for ssmmessages. see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.html',
+        },
+      ]);
+    });
+
   }
 
   private validateSubnets(vpc: ec2.IVpc, vpcSubnets: ec2.SubnetSelection) {
@@ -314,8 +357,8 @@ function getOrCreateVpc(scope: cdk.Construct): ec2.IVpc {
     || process.env.CDK_USE_DEFAULT_VPC === '1' ? ec2.Vpc.fromLookup(scope, 'Vpc', { isDefault: true }) :
     scope.node.tryGetContext('use_vpc_id') ?
       ec2.Vpc.fromLookup(scope, 'Vpc', { vpcId: scope.node.tryGetContext('use_vpc_id') }) :
-      new ec2.Vpc(scope, 'Vpc', { 
-        maxAzs: 3, 
+      new ec2.Vpc(scope, 'Vpc', {
+        maxAzs: 3,
         natGateways: 1,
         flowLogs: { flowLogs: {} },
       });
