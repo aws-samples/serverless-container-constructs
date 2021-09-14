@@ -282,6 +282,12 @@ export class AlbFargateServices extends cdk.Construct {
       new cdk.CfnOutput(this, 'InternalEndpointPrivate', { value: `http://${internalAlbRecordName}.${zoneName}` });
     }
 
+    // ensure the dependency
+    const cp = this.node.tryFindChild('Cluster') as ecs.CfnClusterCapacityProviderAssociations;
+    this.service.forEach(s => {
+      s.node.addDependency(cp);
+    });
+
     // add solution ID for the stack
     if (!cdk.Stack.of(this).templateOptions.description) {
       cdk.Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';

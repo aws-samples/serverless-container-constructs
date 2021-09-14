@@ -1294,6 +1294,8 @@ Object {
     },
     "ServicecustomerService8F0EBE1F": Object {
       "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
         "ServiceExtAlbListener808010AC370C",
         "ServiceIntAlbListener808027FA1497",
       ],
@@ -1368,6 +1370,10 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "ServicecustomerServiceSecurityGroup79D4888A": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "GroupDescription": "demo-stack/Service/customerService/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -1384,6 +1390,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServicecustomerServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup75093328808043049641": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -1405,6 +1415,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServicecustomerServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup888743608080FF622F3A": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -1426,6 +1440,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServicecustomerServiceTaskCountTarget93297161": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "MaxCapacity": 10,
         "MinCapacity": 1,
@@ -1465,6 +1483,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
     },
     "ServicecustomerServiceTaskCountTargetCpuScalingCB60743B": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServicecustomerServiceTaskCountTargetCpuScalingA697DA4A",
         "PolicyType": "TargetTrackingScaling",
@@ -1481,6 +1503,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServicecustomerServiceTaskCountTargetRequestScaling2DB7EC8EF": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServicecustomerServiceTaskCountTargetRequestScaling2821F02E3",
         "PolicyType": "TargetTrackingScaling",
@@ -1552,6 +1578,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServicecustomerServiceTaskCountTargetRequestScalingBEF21383": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServicecustomerServiceTaskCountTargetRequestScaling35027BB0",
         "PolicyType": "TargetTrackingScaling",
@@ -1646,6 +1676,8 @@ Object {
     },
     "ServiceorderService8E2DD24C": Object {
       "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
         "ServiceExtAlbListener80CF2B8C01",
         "ServiceIntAlbListener80DD49BDE2",
       ],
@@ -1720,6 +1752,10 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "ServiceorderServiceSecurityGroupFFF4D002": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "GroupDescription": "demo-stack/Service/orderService/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -1736,6 +1772,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceorderServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup7509332880801797C389": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -1757,6 +1797,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceorderServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup88874360808086403B80": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -1778,6 +1822,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceorderServiceTaskCountTarget1DF1B896": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "MaxCapacity": 20,
         "MinCapacity": 1,
@@ -1817,6 +1865,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
     },
     "ServiceorderServiceTaskCountTargetCpuScaling3846C42F": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceorderServiceTaskCountTargetCpuScaling91FB6CD5",
         "PolicyType": "TargetTrackingScaling",
@@ -1833,6 +1885,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServiceorderServiceTaskCountTargetRequestScaling2D4289F88": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceorderServiceTaskCountTargetRequestScaling224FD8018",
         "PolicyType": "TargetTrackingScaling",
@@ -1904,6 +1960,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServiceorderServiceTaskCountTargetRequestScaling8FA38B30": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceorderServiceTaskCountTargetRequestScaling43FCB665",
         "PolicyType": "TargetTrackingScaling",
@@ -1998,6 +2058,8 @@ Object {
     },
     "ServiceproductService76D76EF8": Object {
       "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
         "ServiceExtAlbListener909050DBE278",
         "ServiceIntAlbListener90902FF1540B",
       ],
@@ -2072,6 +2134,10 @@ Object {
       "Type": "AWS::ECS::Service",
     },
     "ServiceproductServiceSecurityGroup87076A63": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "GroupDescription": "demo-stack/Service/productService/SecurityGroup",
         "SecurityGroupEgress": Array [
@@ -2088,6 +2154,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceproductServiceSecurityGroupfromdemostackServiceExternalAlbSecurityGroup750933288080D86FAD53": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -2109,6 +2179,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceproductServiceSecurityGroupfromdemostackServiceInternalAlbSecurityGroup8887436080805FD62758": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "FromPort": 8080,
@@ -2130,6 +2204,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "ServiceproductServiceTaskCountTarget3E8314AF": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "MaxCapacity": 10,
         "MinCapacity": 1,
@@ -2169,6 +2247,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
     },
     "ServiceproductServiceTaskCountTargetCpuScaling05736257": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceproductServiceTaskCountTargetCpuScaling83756787",
         "PolicyType": "TargetTrackingScaling",
@@ -2185,6 +2267,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServiceproductServiceTaskCountTargetRequestScaling2242D689C": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceproductServiceTaskCountTargetRequestScaling2C258B22F",
         "PolicyType": "TargetTrackingScaling",
@@ -2256,6 +2342,10 @@ Object {
       "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
     },
     "ServiceproductServiceTaskCountTargetRequestScaling88F3E40C": Object {
+      "DependsOn": Array [
+        "ServiceCluster2E988025",
+        "ServiceCluster572F72F1",
+      ],
       "Properties": Object {
         "PolicyName": "demostackServiceproductServiceTaskCountTargetRequestScaling8A8BF0F7",
         "PolicyType": "TargetTrackingScaling",
