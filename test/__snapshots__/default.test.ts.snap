@@ -44,6 +44,105 @@ Object {
     },
   },
   "Resources": Object {
+    "ServiceAccessLogBucket010FE97D": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "BucketEncryption": Object {
+          "ServerSideEncryptionConfiguration": Array [
+            Object {
+              "ServerSideEncryptionByDefault": Object {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "ServiceAccessLogBucketPolicyAB330285": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "ServiceAccessLogBucket010FE97D",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "s3:PutObject*",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::127311923021:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "ServiceAccessLogBucket010FE97D",
+                        "Arn",
+                      ],
+                    },
+                    "/Service-extalblog/AWSLogs/123456789012/*",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "s3:PutObject*",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::127311923021:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "ServiceAccessLogBucket010FE97D",
+                        "Arn",
+                      ],
+                    },
+                    "/Service-intalblog/AWSLogs/123456789012/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
     "ServiceCluster2E988025": Object {
       "Properties": Object {
         "CapacityProviders": Array [
@@ -156,6 +255,8 @@ Object {
     },
     "ServiceExternalAlbC648C006": Object {
       "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
         "ServiceVpcPublicSubnet1DefaultRouteF72A5838",
         "ServiceVpcPublicSubnet2DefaultRoute97CA78A8",
         "ServiceVpcPublicSubnet3DefaultRoute46D8BAF4",
@@ -165,6 +266,20 @@ Object {
           Object {
             "Key": "deletion_protection.enabled",
             "Value": "false",
+          },
+          Object {
+            "Key": "access_logs.s3.enabled",
+            "Value": "true",
+          },
+          Object {
+            "Key": "access_logs.s3.bucket",
+            "Value": Object {
+              "Ref": "ServiceAccessLogBucket010FE97D",
+            },
+          },
+          Object {
+            "Key": "access_logs.s3.prefix",
+            "Value": "Service-extalblog",
           },
         ],
         "Scheme": "internet-facing",
@@ -192,6 +307,10 @@ Object {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
     },
     "ServiceExternalAlbSecurityGroup94D38B09": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "GroupDescription": "Automatically created Security Group for ELB demostackServiceExternalAlbD31E3CD8",
         "SecurityGroupIngress": Array [
@@ -224,6 +343,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceExternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA808005D8D766": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -245,6 +368,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceExternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080D88F4A9D": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -266,6 +393,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceExternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F808067C4E203": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -387,11 +518,29 @@ Object {
       "Type": "AWS::Route53::RecordSet",
     },
     "ServiceInternalAlbF1A10042": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "LoadBalancerAttributes": Array [
           Object {
             "Key": "deletion_protection.enabled",
             "Value": "false",
+          },
+          Object {
+            "Key": "access_logs.s3.enabled",
+            "Value": "true",
+          },
+          Object {
+            "Key": "access_logs.s3.bucket",
+            "Value": Object {
+              "Ref": "ServiceAccessLogBucket010FE97D",
+            },
+          },
+          Object {
+            "Key": "access_logs.s3.prefix",
+            "Value": "Service-intalblog",
           },
         ],
         "Scheme": "internal",
@@ -419,6 +568,10 @@ Object {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
     },
     "ServiceInternalAlbSecurityGroupC261916D": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "GroupDescription": "Automatically created Security Group for ELB demostackServiceInternalAlb994CEF0B",
         "SecurityGroupIngress": Array [
@@ -451,6 +604,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroup",
     },
     "ServiceInternalAlbSecurityGrouptodemostackServicecustomerServiceSecurityGroup76C15ACA8080222FC1FF": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -472,6 +629,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceInternalAlbSecurityGrouptodemostackServiceorderServiceSecurityGroup144F1ECF8080113E2EF0": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -493,6 +654,10 @@ Object {
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "ServiceInternalAlbSecurityGrouptodemostackServiceproductServiceSecurityGroup3058E36F80804A82D088": Object {
+      "DependsOn": Array [
+        "ServiceAccessLogBucketPolicyAB330285",
+        "ServiceAccessLogBucket010FE97D",
+      ],
       "Properties": Object {
         "Description": "Load balancer to target",
         "DestinationSecurityGroupId": Object {
@@ -962,6 +1127,103 @@ Object {
         },
       },
       "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "ServiceVpcflowLogsFlowLog7581FA25": Object {
+      "Properties": Object {
+        "DeliverLogsPermissionArn": Object {
+          "Fn::GetAtt": Array [
+            "ServiceVpcflowLogsIAMRole37206D8A",
+            "Arn",
+          ],
+        },
+        "LogDestinationType": "cloud-watch-logs",
+        "LogGroupName": Object {
+          "Ref": "ServiceVpcflowLogsLogGroupE03FBFED",
+        },
+        "ResourceId": Object {
+          "Ref": "ServiceVpc4872DC6E",
+        },
+        "ResourceType": "VPC",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
+        "TrafficType": "ALL",
+      },
+      "Type": "AWS::EC2::FlowLog",
+    },
+    "ServiceVpcflowLogsIAMRole37206D8A": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "vpc-flow-logs.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "ServiceVpcflowLogsIAMRoleDefaultPolicyDE4A665F": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "ServiceVpcflowLogsLogGroupE03FBFED",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": "iam:PassRole",
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "ServiceVpcflowLogsIAMRole37206D8A",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ServiceVpcflowLogsIAMRoleDefaultPolicyDE4A665F",
+        "Roles": Array [
+          Object {
+            "Ref": "ServiceVpcflowLogsIAMRole37206D8A",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "ServiceVpcflowLogsLogGroupE03FBFED": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "RetentionInDays": 731,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
     },
     "ServicecustomerExtTG3D2842F6": Object {
       "Properties": Object {
