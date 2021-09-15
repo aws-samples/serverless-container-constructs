@@ -102,9 +102,6 @@
     "fargate",
     "serverless"
   ],
-  "engines": {
-    "node": ">= 14.17.0"
-  },
   "main": "lib/index.js",
   "license": "UNLICENSED",
   "version": "0.0.0",

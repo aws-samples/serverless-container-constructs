@@ -1,14 +1,12 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
-import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as iam from '@aws-cdk/aws-iam';
-import * as route53 from '@aws-cdk/aws-route53';
-import * as targets from '@aws-cdk/aws-route53-targets';
 import * as cdk from '@aws-cdk/core';
 import * as cdknag from './cdknag';
+import { getOrCreateVpc } from './common/common-functions';
 
 
-export interface AlbFargateServicesProps {
+export interface BaseFargateServicesProps {
   readonly vpc?: ec2.IVpc;
   readonly tasks: FargateTaskProps[];
   readonly route53Ops?: Route53Options;
@@ -62,7 +60,7 @@ export interface FargateTaskProps {
   readonly scalingPolicy?: ServiceScalingPolicy;
   readonly capacityProviderStrategy?: ecs.CapacityProviderStrategy[];
   /**
-   * Register the service to internal ALB, external ALB or both.
+   * Register the service to internal ELB, external ELB or both.
    * @default both
    */
   readonly accessibility?: LoadBalancerAccessibility;
@@ -94,33 +92,32 @@ export interface Route53Options {
    */
   readonly zoneName?: string;
   /**
-   * the external ALB record name
+   * the external ELB record name
    * @default external
    */
-  readonly externalAlbRecordName?: string;
+  readonly externalElbRecordName?: string;
   /**
-   * the internal ALB record name
+   * the internal ELB record name
    * @default internal
    */
-  readonly internalAlbRecordName?: string;
+  readonly internalElbRecordName?: string;
 }
 
-export class AlbFargateServices extends cdk.Construct {
-  readonly externalAlb?: elbv2.ApplicationLoadBalancer
-  readonly internalAlb?: elbv2.ApplicationLoadBalancer
+export abstract class BaseFargateServices extends cdk.Construct {
   readonly vpc: ec2.IVpc;
   /**
    * The service(s) created from the task(s)
    */
   readonly service: ecs.FargateService[];
-  private hasExternalLoadBalancer: boolean = false;
-  private hasInternalLoadBalancer: boolean = false;
-  private vpcSubnets: ec2.SubnetSelection = { subnetType: ec2.SubnetType.PRIVATE };
+  protected zoneName: string = '';
+  protected hasExternalLoadBalancer: boolean = false;
+  protected hasInternalLoadBalancer: boolean = false;
+  protected vpcSubnets: ec2.SubnetSelection = { subnetType: ec2.SubnetType.PRIVATE_WITH_NAT };
   /**
    * determine if vpcSubnets are all public ones
    */
   private isPublicSubnets: boolean = false;
-  constructor(scope: cdk.Construct, id: string, props: AlbFargateServicesProps) {
+  constructor(scope: cdk.Construct, id: string, props: BaseFargateServicesProps) {
     super(scope, id);
 
     this.vpc = props.vpc ?? getOrCreateVpc(this),
@@ -141,25 +138,6 @@ export class AlbFargateServices extends cdk.Construct {
         this.hasInternalLoadBalancer = true;
       }
     });
-
-    // create the access log bucket
-    const accessLogBucket = new cdknag.AccessLogDeliveryBucket(this, 'AccessLogBucket').bucket;
-
-    if (this.hasExternalLoadBalancer) {
-      this.externalAlb = new elbv2.ApplicationLoadBalancer(this, 'ExternalAlb', {
-        vpc: this.vpc,
-        internetFacing: true,
-      });
-      this.externalAlb.logAccessLogs(accessLogBucket, `${id}-extalblog`);
-    }
-
-    if (this.hasInternalLoadBalancer) {
-      this.internalAlb = new elbv2.ApplicationLoadBalancer(this, 'InternalAlb', {
-        vpc: this.vpc,
-        internetFacing: false,
-      });
-      this.internalAlb.logAccessLogs(accessLogBucket, `${id}-intalblog`);
-    }
 
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: this.vpc,
@@ -195,92 +173,10 @@ export class AlbFargateServices extends cdk.Construct {
         assignPublicIp: this.isPublicSubnets,
       });
       this.service.push(svc);
-
-      // default scaling policy
-      const scaling = svc.autoScaleTaskCount({ maxCapacity: t.scalingPolicy?.maxCapacity ?? 10 });
-      scaling.scaleOnCpuUtilization('CpuScaling', {
-        targetUtilizationPercent: t.scalingPolicy?.targetCpuUtilization ?? 50,
-      });
-
-      if (t.accessibility != LoadBalancerAccessibility.INTERNAL_ONLY) {
-        const exttg = new elbv2.ApplicationTargetGroup(this, `${defaultContainerName}ExtTG`, {
-          protocol: elbv2.ApplicationProtocol.HTTP,
-          vpc: this.vpc,
-        });
-        // listener for the external ALB
-        new elbv2.ApplicationListener(this, `ExtAlbListener${t.listenerPort}`, {
-          loadBalancer: this.externalAlb!,
-          open: true,
-          port: t.listenerPort,
-          protocol: elbv2.ApplicationProtocol.HTTP,
-          defaultTargetGroups: [exttg],
-        });
-        scaling.scaleOnRequestCount('RequestScaling', {
-          requestsPerTarget: t.scalingPolicy?.requestPerTarget ?? 1000,
-          targetGroup: exttg,
-        });
-        exttg.addTarget(svc);
-      }
-
-      if (t.accessibility != LoadBalancerAccessibility.EXTERNAL_ONLY) {
-        const inttg = new elbv2.ApplicationTargetGroup(this, `${defaultContainerName}IntTG`, {
-          protocol: elbv2.ApplicationProtocol.HTTP,
-          vpc: this.vpc,
-        });
-
-        // listener for the internal ALB
-        new elbv2.ApplicationListener(this, `IntAlbListener${t.listenerPort}`, {
-          loadBalancer: this.internalAlb!,
-          open: true,
-          port: t.listenerPort,
-          protocol: elbv2.ApplicationProtocol.HTTP,
-          defaultTargetGroups: [inttg],
-        });
-
-        // extra scaling policy
-        scaling.scaleOnRequestCount('RequestScaling2', {
-          requestsPerTarget: t.scalingPolicy?.requestPerTarget ?? 1000,
-          targetGroup: inttg,
-        });
-        inttg.addTarget(svc);
-      }
-
     });
 
     // Route53
-    const zoneName = props.route53Ops?.zoneName ?? 'svc.local';
-    const externalAlbRecordName = props.route53Ops?.externalAlbRecordName ?? 'external';
-    const internalAlbRecordName = props.route53Ops?.internalAlbRecordName ?? 'internal';
-    const zone = new route53.PrivateHostedZone(this, 'HostedZone', {
-      zoneName,
-      vpc: this.vpc,
-    });
-
-    if (this.hasInternalLoadBalancer) {
-      new route53.ARecord(this, 'InternalAlbAlias', {
-        zone,
-        recordName: internalAlbRecordName,
-        target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(this.internalAlb!)),
-      });
-    }
-
-
-    if (this.hasExternalLoadBalancer) {
-      new route53.ARecord(this, 'ExternalAlbAlias', {
-        zone,
-        recordName: externalAlbRecordName,
-        target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(this.externalAlb!)),
-      });
-    }
-
-    if (this.hasExternalLoadBalancer) {
-      new cdk.CfnOutput(this, 'ExternalEndpoint', { value: `http://${this.externalAlb!.loadBalancerDnsName}` });
-      new cdk.CfnOutput(this, 'ExternalEndpointPrivate', { value: `http://${externalAlbRecordName}.${zoneName}` });
-    }
-    if (this.hasInternalLoadBalancer) {
-      new cdk.CfnOutput(this, 'InternalEndpoint', { value: `http://${this.internalAlb!.loadBalancerDnsName}` });
-      new cdk.CfnOutput(this, 'InternalEndpointPrivate', { value: `http://${internalAlbRecordName}.${zoneName}` });
-    }
+    this.zoneName = props.route53Ops?.zoneName ?? 'svc.local';
 
     // ensure the dependency
     const cp = this.node.tryFindChild('Cluster') as ecs.CfnClusterCapacityProviderAssociations;
@@ -293,29 +189,6 @@ export class AlbFargateServices extends cdk.Construct {
       cdk.Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
     }
 
-    /**
-     * suppress the cdk-nag rules
-     */
-    if (this.externalAlb) {
-      let sg: ec2.CfnSecurityGroup;
-      sg = this.externalAlb.node.tryFindChild('SecurityGroup') as ec2.CfnSecurityGroup;
-      cdknag.Suppress.securityGroup(sg, [
-        {
-          id: 'AwsSolutions-EC23',
-          reason: 'public ALB requires 0.0.0.0/0 inbound access',
-        },
-      ]);
-    }
-    if (this.internalAlb) {
-      let sg: ec2.CfnSecurityGroup;
-      sg = this.internalAlb.node.tryFindChild('SecurityGroup') as ec2.CfnSecurityGroup;
-      cdknag.Suppress.securityGroup(sg, [
-        {
-          id: 'AwsSolutions-EC23',
-          reason: 'internal ALB requires 0.0.0.0/0 inbound access',
-        },
-      ]);
-    }
     props.tasks.forEach(t => {
       let cfnPolicy = t.task.executionRole?.node.tryFindChild('DefaultPolicy') as iam.Policy;
       cdknag.Suppress.iamPolicy(cfnPolicy, [
@@ -355,17 +228,4 @@ export class AlbFargateServices extends cdk.Construct {
     }
     this.isPublicSubnets = subnets.subnetIds.some(s => new Set(vpc.publicSubnets.map(x => x.subnetId)).has(s));
   }
-}
-
-function getOrCreateVpc(scope: cdk.Construct): ec2.IVpc {
-  // use an existing vpc or create a new one
-  return scope.node.tryGetContext('use_default_vpc') === '1'
-    || process.env.CDK_USE_DEFAULT_VPC === '1' ? ec2.Vpc.fromLookup(scope, 'Vpc', { isDefault: true }) :
-    scope.node.tryGetContext('use_vpc_id') ?
-      ec2.Vpc.fromLookup(scope, 'Vpc', { vpcId: scope.node.tryGetContext('use_vpc_id') }) :
-      new ec2.Vpc(scope, 'Vpc', {
-        maxAzs: 3,
-        natGateways: 1,
-        flowLogs: { flowLogs: {} },
-      });
 }

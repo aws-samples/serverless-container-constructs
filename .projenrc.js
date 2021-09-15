@@ -35,7 +35,6 @@ const project = new AwsCdkConstructLibrary({
   peerDeps: [
     'cdk-nag',
   ],
-  minNodeVersion: '14.17.0',
   depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
     ignoreProjen: false,
     workflowOptions: {
