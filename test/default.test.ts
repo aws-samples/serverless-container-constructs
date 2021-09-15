@@ -100,8 +100,8 @@ test('Snapshot', () => {
     ],
     route53Ops: {
       zoneName, // svc.local
-      externalAlbRecordName, // external.svc.local
-      internalAlbRecordName, // internal.svc.local
+      externalElbRecordName: externalAlbRecordName, // external.svc.local
+      internalElbRecordName: internalAlbRecordName, // internal.svc.local
     },
   });
   expect(app.synth().getStackArtifact(stack.artifactId).template).toMatchSnapshot();
