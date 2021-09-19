@@ -36,11 +36,19 @@ new AlbFargateServices(scope: Construct, id: string, props: AlbFargateServicesPr
 
 ##### `externalAlb`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServices.property.externalAlb"></a>
 
+```typescript
+public readonly externalAlb: ApplicationLoadBalancer;
+```
+
 - *Type:* [`@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer`](#@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer)
 
 ---
 
 ##### `internalAlb`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServices.property.internalAlb"></a>
+
+```typescript
+public readonly internalAlb: ApplicationLoadBalancer;
+```
 
 - *Type:* [`@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer`](#@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer)
 
@@ -81,6 +89,10 @@ new BaseFargateServices(scope: Construct, id: string, props: BaseFargateServices
 
 ##### `service`<sup>Required</sup> <a name="serverless-container-constructs.BaseFargateServices.property.service"></a>
 
+```typescript
+public readonly service: FargateService[];
+```
+
 - *Type:* [`@aws-cdk/aws-ecs.FargateService`](#@aws-cdk/aws-ecs.FargateService)[]
 
 The service(s) created from the task(s).
@@ -88,6 +100,10 @@ The service(s) created from the task(s).
 ---
 
 ##### `vpc`<sup>Required</sup> <a name="serverless-container-constructs.BaseFargateServices.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
 
 - *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
 
@@ -108,11 +124,19 @@ const albFargateServicesProps: AlbFargateServicesProps = { ... }
 
 ##### `tasks`<sup>Required</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.tasks"></a>
 
+```typescript
+public readonly tasks: FargateTaskProps[];
+```
+
 - *Type:* [`serverless-container-constructs.FargateTaskProps`](#serverless-container-constructs.FargateTaskProps)[]
 
 ---
 
 ##### `enableExecuteCommand`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.enableExecuteCommand"></a>
+
+```typescript
+public readonly enableExecuteCommand: boolean;
+```
 
 - *Type:* `boolean`
 - *Default:* false
@@ -125,11 +149,19 @@ Whether to enable ECS Exec support.
 
 ##### `route53Ops`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.route53Ops"></a>
 
+```typescript
+public readonly route53Ops: Route53Options;
+```
+
 - *Type:* [`serverless-container-constructs.Route53Options`](#serverless-container-constructs.Route53Options)
 
 ---
 
 ##### `spot`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.spot"></a>
+
+```typescript
+public readonly spot: boolean;
+```
 
 - *Type:* `boolean`
 - *Default:* false
@@ -140,11 +172,19 @@ create a FARGATE_SPOT only cluster.
 
 ##### `vpc`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.vpc"></a>
 
+```typescript
+public readonly vpc: IVpc;
+```
+
 - *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
 
 ---
 
 ##### `vpcSubnets`<sup>Optional</sup> <a name="serverless-container-constructs.AlbFargateServicesProps.property.vpcSubnets"></a>
+
+```typescript
+public readonly vpcSubnets: SubnetSelection;
+```
 
 - *Type:* [`@aws-cdk/aws-ec2.SubnetSelection`](#@aws-cdk/aws-ec2.SubnetSelection)
 - *Default:* {
@@ -167,11 +207,19 @@ const baseFargateServicesProps: BaseFargateServicesProps = { ... }
 
 ##### `tasks`<sup>Required</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.tasks"></a>
 
+```typescript
+public readonly tasks: FargateTaskProps[];
+```
+
 - *Type:* [`serverless-container-constructs.FargateTaskProps`](#serverless-container-constructs.FargateTaskProps)[]
 
 ---
 
 ##### `enableExecuteCommand`<sup>Optional</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.enableExecuteCommand"></a>
+
+```typescript
+public readonly enableExecuteCommand: boolean;
+```
 
 - *Type:* `boolean`
 - *Default:* false
@@ -184,11 +232,19 @@ Whether to enable ECS Exec support.
 
 ##### `route53Ops`<sup>Optional</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.route53Ops"></a>
 
+```typescript
+public readonly route53Ops: Route53Options;
+```
+
 - *Type:* [`serverless-container-constructs.Route53Options`](#serverless-container-constructs.Route53Options)
 
 ---
 
 ##### `spot`<sup>Optional</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.spot"></a>
+
+```typescript
+public readonly spot: boolean;
+```
 
 - *Type:* `boolean`
 - *Default:* false
@@ -199,11 +255,19 @@ create a FARGATE_SPOT only cluster.
 
 ##### `vpc`<sup>Optional</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.vpc"></a>
 
+```typescript
+public readonly vpc: IVpc;
+```
+
 - *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
 
 ---
 
 ##### `vpcSubnets`<sup>Optional</sup> <a name="serverless-container-constructs.BaseFargateServicesProps.property.vpcSubnets"></a>
+
+```typescript
+public readonly vpcSubnets: SubnetSelection;
+```
 
 - *Type:* [`@aws-cdk/aws-ec2.SubnetSelection`](#@aws-cdk/aws-ec2.SubnetSelection)
 - *Default:* {
@@ -226,17 +290,29 @@ const fargateTaskProps: FargateTaskProps = { ... }
 
 ##### `listenerPort`<sup>Required</sup> <a name="serverless-container-constructs.FargateTaskProps.property.listenerPort"></a>
 
+```typescript
+public readonly listenerPort: number;
+```
+
 - *Type:* `number`
 
 ---
 
 ##### `task`<sup>Required</sup> <a name="serverless-container-constructs.FargateTaskProps.property.task"></a>
 
+```typescript
+public readonly task: FargateTaskDefinition;
+```
+
 - *Type:* [`@aws-cdk/aws-ecs.FargateTaskDefinition`](#@aws-cdk/aws-ecs.FargateTaskDefinition)
 
 ---
 
 ##### `accessibility`<sup>Optional</sup> <a name="serverless-container-constructs.FargateTaskProps.property.accessibility"></a>
+
+```typescript
+public readonly accessibility: LoadBalancerAccessibility;
+```
 
 - *Type:* [`serverless-container-constructs.LoadBalancerAccessibility`](#serverless-container-constructs.LoadBalancerAccessibility)
 - *Default:* both
@@ -247,11 +323,19 @@ Register the service to internal ELB, external ELB or both.
 
 ##### `capacityProviderStrategy`<sup>Optional</sup> <a name="serverless-container-constructs.FargateTaskProps.property.capacityProviderStrategy"></a>
 
+```typescript
+public readonly capacityProviderStrategy: CapacityProviderStrategy[];
+```
+
 - *Type:* [`@aws-cdk/aws-ecs.CapacityProviderStrategy`](#@aws-cdk/aws-ecs.CapacityProviderStrategy)[]
 
 ---
 
 ##### `desiredCount`<sup>Optional</sup> <a name="serverless-container-constructs.FargateTaskProps.property.desiredCount"></a>
+
+```typescript
+public readonly desiredCount: number;
+```
 
 - *Type:* `number`
 - *Default:* 1
@@ -261,6 +345,10 @@ desired number of tasks for the service.
 ---
 
 ##### `scalingPolicy`<sup>Optional</sup> <a name="serverless-container-constructs.FargateTaskProps.property.scalingPolicy"></a>
+
+```typescript
+public readonly scalingPolicy: ServiceScalingPolicy;
+```
 
 - *Type:* [`serverless-container-constructs.ServiceScalingPolicy`](#serverless-container-constructs.ServiceScalingPolicy)
 - *Default:* { maxCapacity: 10, targetCpuUtilization: 50, requestsPerTarget: 1000 }
@@ -281,6 +369,10 @@ const route53Options: Route53Options = { ... }
 
 ##### `externalElbRecordName`<sup>Optional</sup> <a name="serverless-container-constructs.Route53Options.property.externalElbRecordName"></a>
 
+```typescript
+public readonly externalElbRecordName: string;
+```
+
 - *Type:* `string`
 - *Default:* external
 
@@ -290,6 +382,10 @@ the external ELB record name.
 
 ##### `internalElbRecordName`<sup>Optional</sup> <a name="serverless-container-constructs.Route53Options.property.internalElbRecordName"></a>
 
+```typescript
+public readonly internalElbRecordName: string;
+```
+
 - *Type:* `string`
 - *Default:* internal
 
@@ -298,6 +394,10 @@ the internal ELB record name.
 ---
 
 ##### `zoneName`<sup>Optional</sup> <a name="serverless-container-constructs.Route53Options.property.zoneName"></a>
+
+```typescript
+public readonly zoneName: string;
+```
 
 - *Type:* `string`
 - *Default:* svc.local
@@ -318,6 +418,10 @@ const serviceScalingPolicy: ServiceScalingPolicy = { ... }
 
 ##### `maxCapacity`<sup>Optional</sup> <a name="serverless-container-constructs.ServiceScalingPolicy.property.maxCapacity"></a>
 
+```typescript
+public readonly maxCapacity: number;
+```
+
 - *Type:* `number`
 - *Default:* 10
 
@@ -327,6 +431,10 @@ max capacity for the service autoscaling.
 
 ##### `requestPerTarget`<sup>Optional</sup> <a name="serverless-container-constructs.ServiceScalingPolicy.property.requestPerTarget"></a>
 
+```typescript
+public readonly requestPerTarget: number;
+```
+
 - *Type:* `number`
 - *Default:* 1000
 
@@ -335,6 +443,10 @@ request per target.
 ---
 
 ##### `targetCpuUtilization`<sup>Optional</sup> <a name="serverless-container-constructs.ServiceScalingPolicy.property.targetCpuUtilization"></a>
+
+```typescript
+public readonly targetCpuUtilization: number;
+```
 
 - *Type:* `number`
 - *Default:* 50
