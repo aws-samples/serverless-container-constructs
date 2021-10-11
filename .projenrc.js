@@ -1,6 +1,5 @@
 const {
   AwsCdkConstructLibrary,
-  DependenciesUpgradeMechanism,
   DevEnvironmentDockerImage,
   Gitpod,
 } = require('projen');
@@ -40,13 +39,13 @@ const project = new AwsCdkConstructLibrary({
   peerDeps: [
     'cdk-nag',
   ],
-  depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
+  depsUpgradeOptions: {
     ignoreProjen: false,
     workflowOptions: {
       labels: ['auto-approve', 'auto-merge'],
       secret: AUTOMATION_TOKEN,
     },
-  }),
+  },
   autoApproveOptions: {
     secret: 'GITHUB_TOKEN',
     allowedUsernames: ['pahud'],
