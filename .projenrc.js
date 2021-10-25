@@ -10,6 +10,7 @@ const project = new AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
   authorAddress: 'hunhsieh@amazon.com',
   cdkVersion: '1.95.2',
+  minNodeVersion: '12.20.0',
   defaultReleaseBranch: 'main',
   licensed: false, // leave the LICENSE file as is.
   name: 'serverless-container-constructs',
