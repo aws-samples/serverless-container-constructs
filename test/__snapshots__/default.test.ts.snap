@@ -1274,6 +1274,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
@@ -1285,6 +1291,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
@@ -1656,6 +1668,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
@@ -1667,6 +1685,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
@@ -2038,6 +2062,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
@@ -2049,6 +2079,12 @@ Object {
       "Properties": Object {
         "Port": 80,
         "Protocol": "HTTP",
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
         "TargetType": "ip",
         "VpcId": Object {
           "Ref": "ServiceVpc4872DC6E",
