@@ -1266,6 +1266,12 @@ Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
         "RetentionInDays": 731,
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
       },
       "Type": "AWS::Logs::LogGroup",
       "UpdateReplacePolicy": "Retain",

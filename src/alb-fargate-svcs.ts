@@ -11,8 +11,8 @@ import { BaseFargateServices, BaseFargateServicesProps, LoadBalancerAccessibilit
 export interface AlbFargateServicesProps extends BaseFargateServicesProps {}
 
 export class AlbFargateServices extends BaseFargateServices {
-  readonly externalAlb?: elbv2.ApplicationLoadBalancer
-  readonly internalAlb?: elbv2.ApplicationLoadBalancer
+  readonly externalAlb?: elbv2.ApplicationLoadBalancer;
+  readonly internalAlb?: elbv2.ApplicationLoadBalancer;
   constructor(scope: cdk.Construct, id: string, props: AlbFargateServicesProps) {
     super(scope, id, props);
 
