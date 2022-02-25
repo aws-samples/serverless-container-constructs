@@ -1,10 +1,12 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as ecs from '@aws-cdk/aws-ecs';
-import * as iam from '@aws-cdk/aws-iam';
-import * as cdk from '@aws-cdk/core';
+import {
+  Stack,
+  aws_ec2 as ec2,
+  aws_ecs as ecs,
+  aws_iam as iam,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 import * as cdknag from './cdknag';
 import { getOrCreateVpc } from './common/common-functions';
-
 
 export interface BaseFargateServicesProps {
   readonly vpc?: ec2.IVpc;
@@ -103,7 +105,7 @@ export interface Route53Options {
   readonly internalElbRecordName?: string;
 }
 
-export abstract class BaseFargateServices extends cdk.Construct {
+export abstract class BaseFargateServices extends Construct {
   readonly vpc: ec2.IVpc;
   /**
    * The service(s) created from the task(s)
@@ -117,7 +119,7 @@ export abstract class BaseFargateServices extends cdk.Construct {
    * determine if vpcSubnets are all public ones
    */
   private isPublicSubnets: boolean = false;
-  constructor(scope: cdk.Construct, id: string, props: BaseFargateServicesProps) {
+  constructor(scope: Construct, id: string, props: BaseFargateServicesProps) {
     super(scope, id);
 
     this.vpc = props.vpc ?? getOrCreateVpc(this),
@@ -185,8 +187,8 @@ export abstract class BaseFargateServices extends cdk.Construct {
     });
 
     // add solution ID for the stack
-    if (!cdk.Stack.of(this).templateOptions.description) {
-      cdk.Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
+    if (!Stack.of(this).templateOptions.description) {
+      Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
     }
 
     props.tasks.forEach(t => {

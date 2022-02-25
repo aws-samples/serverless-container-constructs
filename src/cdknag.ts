@@ -1,7 +1,9 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as iam from '@aws-cdk/aws-iam';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as cdk from '@aws-cdk/core';
+import {
+  aws_ec2 as ec2,
+  aws_iam as iam,
+  aws_s3 as s3,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
 interface ruleToSuppress {
   readonly id: string;
@@ -9,15 +11,15 @@ interface ruleToSuppress {
 }
 
 export class Suppress {
-  static bucket(construct: cdk.Construct, rulesToSuppress: ruleToSuppress[] ) {
+  static bucket(construct: Construct, rulesToSuppress: ruleToSuppress[] ) {
     const cfnResource = construct?.node.defaultChild as s3.CfnBucket;
     cfnResource?.addMetadata('cdk_nag', { rules_to_suppress: rulesToSuppress });
   }
-  static securityGroup(construct: cdk.Construct, rulesToSuppress: ruleToSuppress[]) {
+  static securityGroup(construct: Construct, rulesToSuppress: ruleToSuppress[]) {
     const cfnResource = construct?.node.defaultChild as ec2.CfnSecurityGroup;
     cfnResource?.addMetadata('cdk_nag', { rules_to_suppress: rulesToSuppress });
   }
-  static iamPolicy(construct: cdk.Construct, rulesToSuppress: ruleToSuppress[]) {
+  static iamPolicy(construct: Construct, rulesToSuppress: ruleToSuppress[]) {
     const cfnResource = construct?.node.defaultChild as iam.CfnPolicy;
     cfnResource?.addMetadata('cdk_nag', { rules_to_suppress: rulesToSuppress });
   }
@@ -31,9 +33,9 @@ export interface BucketProps {
 /**
  * The generic access log and log delivery bucket.
  */
-export class AccessLogDeliveryBucket extends cdk.Construct {
+export class AccessLogDeliveryBucket extends Construct {
   readonly bucket: s3.Bucket;
-  constructor(scope: cdk.Construct, id: string, props: BucketProps = {}) {
+  constructor(scope: Construct, id: string, props: BucketProps = {}) {
     super(scope, id);
     this.bucket = new s3.Bucket(this, id, {
       encryption: s3.BucketEncryption.S3_MANAGED,

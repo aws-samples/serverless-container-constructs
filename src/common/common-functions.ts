@@ -1,7 +1,9 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as cdk from '@aws-cdk/core';
+import {
+  aws_ec2 as ec2,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
-export function getOrCreateVpc(scope: cdk.Construct): ec2.IVpc {
+export function getOrCreateVpc(scope: Construct): ec2.IVpc {
   // use an existing vpc or create a new one
   return scope.node.tryGetContext('use_default_vpc') === '1'
     || process.env.CDK_USE_DEFAULT_VPC === '1' ? ec2.Vpc.fromLookup(scope, 'Vpc', { isDefault: true }) :

@@ -1,49 +1,31 @@
 const {
-  AwsCdkConstructLibrary,
+  awscdk,
   DevEnvironmentDockerImage,
   Gitpod,
 } = require('projen');
 
-const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
-
-const project = new AwsCdkConstructLibrary({
+const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Pahud Hsieh',
   authorAddress: 'hunhsieh@amazon.com',
-  cdkVersion: '1.95.2',
+  cdkVersion: '2.11.0',
   defaultReleaseBranch: 'main',
   licensed: false, // leave the LICENSE file as is.
   name: 'serverless-container-constructs',
   description: 'CDK patterns for modern application with serverless containers on AWS',
   repositoryUrl: 'https://github.com/aws-samples/serverless-container-constructs',
-  cdkDependencies: [
-    '@aws-cdk/core',
-    '@aws-cdk/aws-ec2',
-    '@aws-cdk/aws-ecs',
-    '@aws-cdk/aws-efs',
-    '@aws-cdk/aws-events',
-    '@aws-cdk/aws-events-targets',
-    '@aws-cdk/aws-iam',
-    '@aws-cdk/aws-lambda',
-    '@aws-cdk/aws-logs',
-    '@aws-cdk/aws-rds',
-    '@aws-cdk/aws-route53',
-    '@aws-cdk/aws-route53-targets',
-    '@aws-cdk/aws-secretsmanager',
-    '@aws-cdk/aws-s3',
-    '@aws-cdk/aws-certificatemanager',
-    '@aws-cdk/aws-elasticloadbalancingv2',
-  ],
   deps: [
-    'cdk-nag',
+    'cdk-nag@^2.0.0',
   ],
   peerDeps: [
-    'cdk-nag',
+    'cdk-nag@^2.0.0',
+  ],
+  devDeps: [
+    'cdk-nag@2.0.0',
   ],
   depsUpgradeOptions: {
     ignoreProjen: false,
     workflowOptions: {
       labels: ['auto-approve', 'auto-merge'],
-      secret: AUTOMATION_TOKEN,
     },
   },
   autoApproveOptions: {

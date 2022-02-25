@@ -1,22 +1,24 @@
 import * as path from 'path';
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as ecs from '@aws-cdk/aws-ecs';
-import * as cdk from '@aws-cdk/core';
+import {
+  Stack, App, Aspects,
+  aws_ec2 as ec2,
+  aws_ecs as ecs,
+} from 'aws-cdk-lib';
 import { AwsSolutionsChecks } from 'cdk-nag';
 import { AlbFargateServices } from './index';
 import { LoadBalancerAccessibility } from './main';
 
-const app = new cdk.App();
+const app = new App();
 
 const env = {
   region: process.env.CDK_DEFAULT_REGION,
   account: process.env.CDK_DEFAULT_ACCOUNT,
 };
 
-const stack = new cdk.Stack(app, 'demo-stack', { env });
+const stack = new Stack(app, 'demo-stack', { env });
 
 if (stack.node.tryGetContext('AWS_SOLUTIONS_CHECK')) {
-  cdk.Aspects.of(app).add(new AwsSolutionsChecks());
+  Aspects.of(app).add(new AwsSolutionsChecks());
 }
 
 const orderTask = new ecs.FargateTaskDefinition(stack, 'orderTask', {
