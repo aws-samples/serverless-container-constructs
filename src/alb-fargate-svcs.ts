@@ -1,19 +1,22 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as ecs from '@aws-cdk/aws-ecs';
-import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
-import * as iam from '@aws-cdk/aws-iam';
-import * as route53 from '@aws-cdk/aws-route53';
-import * as targets from '@aws-cdk/aws-route53-targets';
-import * as cdk from '@aws-cdk/core';
+import {
+  CfnOutput, Stack,
+  aws_ec2 as ec2,
+  aws_ecs as ecs,
+  aws_elasticloadbalancingv2 as elbv2,
+  aws_iam as iam,
+  aws_route53 as route53,
+  aws_route53_targets as targets,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 import * as cdknag from './cdknag';
 import { BaseFargateServices, BaseFargateServicesProps, LoadBalancerAccessibility } from './main';
 
 export interface AlbFargateServicesProps extends BaseFargateServicesProps {}
 
 export class AlbFargateServices extends BaseFargateServices {
-  readonly externalAlb?: elbv2.ApplicationLoadBalancer
-  readonly internalAlb?: elbv2.ApplicationLoadBalancer
-  constructor(scope: cdk.Construct, id: string, props: AlbFargateServicesProps) {
+  readonly externalAlb?: elbv2.ApplicationLoadBalancer;
+  readonly internalAlb?: elbv2.ApplicationLoadBalancer;
+  constructor(scope: Construct, id: string, props: AlbFargateServicesProps) {
     super(scope, id, props);
 
     // create the access log bucket
@@ -115,12 +118,12 @@ export class AlbFargateServices extends BaseFargateServices {
     }
 
     if (this.hasExternalLoadBalancer) {
-      new cdk.CfnOutput(this, 'ExternalEndpoint', { value: `http://${this.externalAlb!.loadBalancerDnsName}` });
-      new cdk.CfnOutput(this, 'ExternalEndpointPrivate', { value: `http://${externalAlbRecordName}.${this.zoneName}` });
+      new CfnOutput(this, 'ExternalEndpoint', { value: `http://${this.externalAlb!.loadBalancerDnsName}` });
+      new CfnOutput(this, 'ExternalEndpointPrivate', { value: `http://${externalAlbRecordName}.${this.zoneName}` });
     }
     if (this.hasInternalLoadBalancer) {
-      new cdk.CfnOutput(this, 'InternalEndpoint', { value: `http://${this.internalAlb!.loadBalancerDnsName}` });
-      new cdk.CfnOutput(this, 'InternalEndpointPrivate', { value: `http://${internalAlbRecordName}.${this.zoneName}` });
+      new CfnOutput(this, 'InternalEndpoint', { value: `http://${this.internalAlb!.loadBalancerDnsName}` });
+      new CfnOutput(this, 'InternalEndpointPrivate', { value: `http://${internalAlbRecordName}.${this.zoneName}` });
     }
 
     // ensure the dependency
@@ -130,8 +133,8 @@ export class AlbFargateServices extends BaseFargateServices {
     });
 
     // add solution ID for the stack
-    if (!cdk.Stack.of(this).templateOptions.description) {
-      cdk.Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
+    if (!Stack.of(this).templateOptions.description) {
+      Stack.of(this).templateOptions.description = '(SO8030) - AWS CDK stack with serverless-container-constructs';
     }
 
     /**

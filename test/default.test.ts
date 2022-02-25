@@ -1,22 +1,24 @@
-import '@aws-cdk/assert/jest';
 import * as path from 'path';
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as ecs from '@aws-cdk/aws-ecs';
-import * as cdk from '@aws-cdk/core';
+import {
+  App, Stack,
+  aws_ec2 as ec2,
+  aws_ecs as ecs,
+} from 'aws-cdk-lib';
+import { Template, Match } from 'aws-cdk-lib/assertions';
 import { AlbFargateServices, LoadBalancerAccessibility } from '../src/index';
 
-let app: cdk.App;
+let app: App;
 let env: { region: string; account: string };
-let stack: cdk.Stack;
+let stack: Stack;
 
 
 beforeEach(() => {
-  app = new cdk.App();
+  app = new App();
   env = {
     region: 'us-east-1',
     account: '123456789012',
   };
-  stack = new cdk.Stack(app, 'demo-stack', { env });
+  stack = new Stack(app, 'demo-stack', { env });
 });
 
 
@@ -127,17 +129,18 @@ test('AlbFargateServices - minimal setup', () => {
   // THEN
   // We should have two ALBs
   // the external one
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internet-facing',
     Type: 'application',
   });
   // the internal one
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internal',
     Type: 'application',
   });
   // We should have fargate service
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     LaunchType: 'FARGATE',
   });
 });
@@ -161,17 +164,17 @@ test('AlbFargateServices - internal only', () => {
 
   // THEN
   // we should NOT have the external ALB
-  expect(stack).not.toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-    Scheme: 'internet-facing',
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+    Scheme: Match.not('internet-facing'),
     Type: 'application',
   });
   // we should have the internal ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internal',
     Type: 'application',
   });
   // We should have fargate service
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     LaunchType: 'FARGATE',
   });
 });
@@ -195,17 +198,16 @@ test('AlbFargateServices - external only', () => {
 
   // THEN
   // we should NOT have the internal ALB
-  expect(stack).not.toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-    Scheme: 'internal',
-    Type: 'application',
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+    Scheme: Match.not('internal'),
   });
   // we should have the external ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internet-facing',
     Type: 'application',
   });
   // We should have fargate service
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     LaunchType: 'FARGATE',
   });
 });
@@ -243,17 +245,17 @@ test('AlbFargateServices - partial internal only', () => {
 
   // THEN
   // we should still have the external ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internet-facing',
     Type: 'application',
   });
   // we should have the internal ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internal',
     Type: 'application',
   });
   // We should have fargate service
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     LaunchType: 'FARGATE',
   });
 });
@@ -290,17 +292,17 @@ test('AlbFargateServices - partial external only', () => {
 
   // THEN
   // we should still have the external ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internet-facing',
     Type: 'application',
   });
   // we should have the internal ALB
-  expect(stack).toHaveResource('AWS::ElasticLoadBalancingV2::LoadBalancer', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
     Scheme: 'internal',
     Type: 'application',
   });
   // We should have fargate service
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     LaunchType: 'FARGATE',
   });
 });
@@ -327,7 +329,7 @@ test('AlbFargateServices - vpc subnet select default select private subnet', () 
 
   // THEN
   // we should still have the assgin public Ip.
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     NetworkConfiguration: {
       AwsvpcConfiguration: {
         AssignPublicIp: 'DISABLED',
@@ -380,7 +382,7 @@ test('AlbFargateServices - vpc subnet select test select public subnet', () => {
 
   // THEN
   // we should still have the assgin public Ip.
-  expect(stack).toHaveResource('AWS::ECS::Service', {
+  Template.fromStack(stack).hasResourceProperties('AWS::ECS::Service', {
     NetworkConfiguration: {
       AwsvpcConfiguration: {
         AssignPublicIp: 'ENABLED',

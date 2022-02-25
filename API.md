@@ -14,7 +14,7 @@ new AlbFargateServices(scope: Construct, id: string, props: AlbFargateServicesPr
 
 ##### `scope`<sup>Required</sup> <a name="serverless-container-constructs.AlbFargateServices.parameter.scope"></a>
 
-- *Type:* [`@aws-cdk/core.Construct`](#@aws-cdk/core.Construct)
+- *Type:* [`constructs.Construct`](#constructs.Construct)
 
 ---
 
@@ -40,7 +40,7 @@ new AlbFargateServices(scope: Construct, id: string, props: AlbFargateServicesPr
 public readonly externalAlb: ApplicationLoadBalancer;
 ```
 
-- *Type:* [`@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer`](#@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer)
+- *Type:* [`aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer`](#aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer)
 
 ---
 
@@ -50,7 +50,7 @@ public readonly externalAlb: ApplicationLoadBalancer;
 public readonly internalAlb: ApplicationLoadBalancer;
 ```
 
-- *Type:* [`@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer`](#@aws-cdk/aws-elasticloadbalancingv2.ApplicationLoadBalancer)
+- *Type:* [`aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer`](#aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer)
 
 ---
 
@@ -67,7 +67,7 @@ new BaseFargateServices(scope: Construct, id: string, props: BaseFargateServices
 
 ##### `scope`<sup>Required</sup> <a name="serverless-container-constructs.BaseFargateServices.parameter.scope"></a>
 
-- *Type:* [`@aws-cdk/core.Construct`](#@aws-cdk/core.Construct)
+- *Type:* [`constructs.Construct`](#constructs.Construct)
 
 ---
 
@@ -93,7 +93,7 @@ new BaseFargateServices(scope: Construct, id: string, props: BaseFargateServices
 public readonly service: FargateService[];
 ```
 
-- *Type:* [`@aws-cdk/aws-ecs.FargateService`](#@aws-cdk/aws-ecs.FargateService)[]
+- *Type:* [`aws-cdk-lib.aws_ecs.FargateService`](#aws-cdk-lib.aws_ecs.FargateService)[]
 
 The service(s) created from the task(s).
 
@@ -105,7 +105,7 @@ The service(s) created from the task(s).
 public readonly vpc: IVpc;
 ```
 
-- *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
+- *Type:* [`aws-cdk-lib.aws_ec2.IVpc`](#aws-cdk-lib.aws_ec2.IVpc)
 
 ---
 
@@ -176,7 +176,7 @@ create a FARGATE_SPOT only cluster.
 public readonly vpc: IVpc;
 ```
 
-- *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
+- *Type:* [`aws-cdk-lib.aws_ec2.IVpc`](#aws-cdk-lib.aws_ec2.IVpc)
 
 ---
 
@@ -186,7 +186,7 @@ public readonly vpc: IVpc;
 public readonly vpcSubnets: SubnetSelection;
 ```
 
-- *Type:* [`@aws-cdk/aws-ec2.SubnetSelection`](#@aws-cdk/aws-ec2.SubnetSelection)
+- *Type:* [`aws-cdk-lib.aws_ec2.SubnetSelection`](#aws-cdk-lib.aws_ec2.SubnetSelection)
 - *Default:* {
 subnetType: ec2.SubnetType.PRIVATE,
 }
@@ -259,7 +259,7 @@ create a FARGATE_SPOT only cluster.
 public readonly vpc: IVpc;
 ```
 
-- *Type:* [`@aws-cdk/aws-ec2.IVpc`](#@aws-cdk/aws-ec2.IVpc)
+- *Type:* [`aws-cdk-lib.aws_ec2.IVpc`](#aws-cdk-lib.aws_ec2.IVpc)
 
 ---
 
@@ -269,7 +269,7 @@ public readonly vpc: IVpc;
 public readonly vpcSubnets: SubnetSelection;
 ```
 
-- *Type:* [`@aws-cdk/aws-ec2.SubnetSelection`](#@aws-cdk/aws-ec2.SubnetSelection)
+- *Type:* [`aws-cdk-lib.aws_ec2.SubnetSelection`](#aws-cdk-lib.aws_ec2.SubnetSelection)
 - *Default:* {
 subnetType: ec2.SubnetType.PRIVATE,
 }
@@ -304,7 +304,7 @@ public readonly listenerPort: number;
 public readonly task: FargateTaskDefinition;
 ```
 
-- *Type:* [`@aws-cdk/aws-ecs.FargateTaskDefinition`](#@aws-cdk/aws-ecs.FargateTaskDefinition)
+- *Type:* [`aws-cdk-lib.aws_ecs.FargateTaskDefinition`](#aws-cdk-lib.aws_ecs.FargateTaskDefinition)
 
 ---
 
@@ -327,7 +327,7 @@ Register the service to internal ELB, external ELB or both.
 public readonly capacityProviderStrategy: CapacityProviderStrategy[];
 ```
 
-- *Type:* [`@aws-cdk/aws-ecs.CapacityProviderStrategy`](#@aws-cdk/aws-ecs.CapacityProviderStrategy)[]
+- *Type:* [`aws-cdk-lib.aws_ecs.CapacityProviderStrategy`](#aws-cdk-lib.aws_ecs.CapacityProviderStrategy)[]
 
 ---
 

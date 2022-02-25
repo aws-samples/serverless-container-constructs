@@ -43,6 +43,13 @@ Object {
       "Value": "http://internal.svc.local",
     },
   },
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
   "Resources": Object {
     "ServiceAccessLogBucket3812154F": Object {
       "DeletionPolicy": "Retain",
@@ -89,7 +96,11 @@ Object {
           "Statement": Array [
             Object {
               "Action": Array [
-                "s3:PutObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
                 "s3:Abort*",
               ],
               "Effect": "Allow",
@@ -123,8 +134,51 @@ Object {
               },
             },
             Object {
+              "Action": "s3:PutObject",
+              "Condition": Object {
+                "StringEquals": Object {
+                  "s3:x-amz-acl": "bucket-owner-full-control",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "delivery.logs.amazonaws.com",
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "ServiceAccessLogBucket3812154F",
+                        "Arn",
+                      ],
+                    },
+                    "/Service-extalblog/AWSLogs/123456789012/*",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:GetBucketAcl",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "delivery.logs.amazonaws.com",
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "ServiceAccessLogBucket3812154F",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
               "Action": Array [
-                "s3:PutObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
                 "s3:Abort*",
               ],
               "Effect": "Allow",
@@ -141,6 +195,32 @@ Object {
                     ],
                   ],
                 },
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "ServiceAccessLogBucket3812154F",
+                        "Arn",
+                      ],
+                    },
+                    "/Service-intalblog/AWSLogs/123456789012/*",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:PutObject",
+              "Condition": Object {
+                "StringEquals": Object {
+                  "s3:x-amz-acl": "bucket-owner-full-control",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "delivery.logs.amazonaws.com",
               },
               "Resource": Object {
                 "Fn::Join": Array [
@@ -1266,6 +1346,12 @@ Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
         "RetentionInDays": 731,
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "demo-stack/Service/Vpc",
+          },
+        ],
       },
       "Type": "AWS::Logs::LogGroup",
       "UpdateReplacePolicy": "Retain",
@@ -2476,16 +2562,7 @@ Object {
             ],
             "Essential": true,
             "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "123456789012.dkr.ecr.us-east-1.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/aws-cdk/assets:1adf1e0aa55db7c81053817a2b831dc8aafb17e60d47c9e37ed581e03998638b",
-                ],
-              ],
+              "Fn::Sub": "123456789012.dkr.ecr.us-east-1.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-east-1:beedd0dd4351a19fe61006f6a9fdb4e9bcffb1166b17a544a6931d7f069f5c6b",
             },
             "Name": "customer",
             "PortMappings": Array [
@@ -2564,7 +2641,7 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                    ":ecr:us-east-1:123456789012:repository/cdk-hnb659fds-container-assets-123456789012-us-east-1",
                   ],
                 ],
               },
@@ -2627,16 +2704,7 @@ Object {
             ],
             "Essential": true,
             "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "123456789012.dkr.ecr.us-east-1.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/aws-cdk/assets:8f81d7ee9ca280e109f8864efb89c8a4b8af311e4ae250ae66e63267af76296b",
-                ],
-              ],
+              "Fn::Sub": "123456789012.dkr.ecr.us-east-1.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-east-1:955093f65e717737dc283725b7a4675de976235957a19fc5d7bc3c99d811126e",
             },
             "Name": "order",
             "PortMappings": Array [
@@ -2715,7 +2783,7 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                    ":ecr:us-east-1:123456789012:repository/cdk-hnb659fds-container-assets-123456789012-us-east-1",
                   ],
                 ],
               },
@@ -2778,16 +2846,7 @@ Object {
             ],
             "Essential": true,
             "Image": Object {
-              "Fn::Join": Array [
-                "",
-                Array [
-                  "123456789012.dkr.ecr.us-east-1.",
-                  Object {
-                    "Ref": "AWS::URLSuffix",
-                  },
-                  "/aws-cdk/assets:1adf1e0aa55db7c81053817a2b831dc8aafb17e60d47c9e37ed581e03998638b",
-                ],
-              ],
+              "Fn::Sub": "123456789012.dkr.ecr.us-east-1.\${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-us-east-1:beedd0dd4351a19fe61006f6a9fdb4e9bcffb1166b17a544a6931d7f069f5c6b",
             },
             "Name": "product",
             "PortMappings": Array [
@@ -2866,7 +2925,7 @@ Object {
                     Object {
                       "Ref": "AWS::Partition",
                     },
-                    ":ecr:us-east-1:123456789012:repository/aws-cdk/assets",
+                    ":ecr:us-east-1:123456789012:repository/cdk-hnb659fds-container-assets-123456789012-us-east-1",
                   ],
                 ],
               },
@@ -2904,6 +2963,33 @@ Object {
         },
       },
       "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
     },
   },
 }
