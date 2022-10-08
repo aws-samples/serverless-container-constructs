@@ -13,14 +13,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   name: 'serverless-container-constructs',
   description: 'CDK patterns for modern application with serverless containers on AWS',
   repositoryUrl: 'https://github.com/aws-samples/serverless-container-constructs',
-  deps: [
+  bundledDeps: [
     'cdk-nag@^2.0.0',
-  ],
-  peerDeps: [
-    'cdk-nag@^2.0.0',
-  ],
-  devDeps: [
-    'cdk-nag@2.0.0',
   ],
   depsUpgradeOptions: {
     ignoreProjen: false,
